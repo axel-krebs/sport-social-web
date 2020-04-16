@@ -46,7 +46,7 @@ lazy val root = (project in file("."))
       // "org.webjars.npm" % "lit-html" % "1.1.2",
       // "org.webjars.npm" % "ionic" % "4.10.2",
       // "org.webjars.npm" % "stencil" % "0.0.5",
-      "de.akrebs.testing" % "sposo-uilib" % "0.0.1",
+      "de.akrebs.testing" % "web-ui-components" % "0.0.1",
       "org.webjars.npm" % "backbone" % "1.4.0"
       // "org.webjars.npm" % "types__sizzle" % "2.3.2",
       // "org.webjars.npm" % "types__graphql" % "0.9.4",
@@ -88,7 +88,8 @@ resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   "Maven Central" at "https://repo1.maven.org/maven2/",
   "jBCrypt Repository" at "https://repo1.maven.org/maven2/org/",
-  "Local Maven Repository" at "file://C:\\Users/akrebs/.m2/repository"
+  //"Local Maven Repository" at "file://C:\\Users/akrebs/.m2/repository"
+  "Axel Krebs Bintray Repository" at "https://dl.bintray.com/axel-krebs/web-ui-components/"
 )
 
 // Adds additional packages into Twirl
