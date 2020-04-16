@@ -1,0 +1,8 @@
+# https://www.playframework.com/documentation/latest/ScalaI18N
+main.title=Sport Social
+menu.login.notloggedin=Login
+menu.quicklinks=Shortcuts
+profile.login.form.nickname=Nickname
+profile.login.form.password=Password
+settings.sport.select=Select Sport
+settings.sport.select.none_selected=None selected.

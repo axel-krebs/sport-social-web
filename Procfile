@@ -1,0 +1,1 @@
+web: target/universal/stage/bin/sport-social-app -Dhttp.port=$PORT

@@ -1,0 +1,13 @@
+{
+  "coffeelint": {
+    "transforms": [ "coffee-react-transform" ]
+  },
+  "indentation" : {
+    "level" : "error",
+    "value" : 4
+  },
+  "line_endings" : {
+    "value" : "unix",
+    "level" : "error"
+  }
+}
