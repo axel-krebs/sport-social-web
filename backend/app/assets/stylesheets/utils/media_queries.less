@@ -1,0 +1,105 @@
+/* PC monitor style */
+@media (max-width: 1050px) {
+    header {
+        height: 65px;
+    }
+    .icon-brand {
+         padding: 5px 5px 5px 10px;
+    }
+    #sposo-ad-placeholder {
+        width: 100%;
+        flex-shrink: 1;
+    }
+    .user-logo {
+        width: 80px;
+    }
+    .details_left {
+        padding-left: 10px;
+    }
+    main .container {
+        min-width: 0;
+        width: 100%;
+    }
+    .details_right {
+        display: none;
+    }
+    footer .container {
+        flex-grow: 1;
+    }
+}
+
+/* start of  tablet styles (Samsung Galaxy Tab 10)*/
+@media screen and (max-width: 820px) {
+    body {
+        overflow: hidden;
+        display: block;
+    }
+    header {
+        position: fixed;
+        height: 60px;
+        width: 100%;
+    }
+    .icon-brand {
+        min-width: 150px;
+    }
+     #sposo-ad-placeholder {
+        padding: 3px 5px 3px 5px;
+    }
+    .user-logo {
+        width: 60px;
+    }
+    .details_left {
+        display: none;
+    }
+    main {
+        position: fixed;
+        top: 60px;
+        bottom: 40px;
+        width: 100%;
+        overflow-y: scroll;
+    }
+    footer {
+        position: fixed;
+        bottom: 0;
+        margin-left: 0;
+        height: 40px;
+        width: 100%;
+        padding: 0;
+    }
+    footer > .container {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* Standard smart phone */
+@media screen and (max-width: 560px) {
+    header {
+        height: 50px;
+    }
+    .icon-brand {
+        min-width: 120px;
+    }
+    #user-logo-button {
+        padding: 5px 10px 5px 10px;
+    }
+    main {
+        top: 50px;
+        bottom: 30px;
+    }
+}
+/* very small smart phones */
+@media (max-width: 340px) {
+    header {
+        height: 40px;
+    }
+    .icon-brand {
+        min-width: 90px;
+    }
+    main {
+        top: 40px;
+    }
+    footer {
+        height: 30px;
+    }
+}

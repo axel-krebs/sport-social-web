@@ -1,0 +1,3 @@
+@(user: Option[User])(implicit messages: Messages)
+<h3>You're q HOME!!</h3>
+<p>@user.foreach { user => user.email }</p>

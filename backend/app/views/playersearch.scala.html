@@ -1,0 +1,10 @@
+@(player: Seq[Player], user: Option[User])(implicit messages: Messages)
+
+@main("Players Search")(user){
+	<h1>resulz</h1>
+	<ul>
+	@player.map  { p =>
+		<li>@p.sureName, @p.foreName, @p.birthDate</li>
+	}
+	</ul>
+}

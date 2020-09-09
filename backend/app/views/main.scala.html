@@ -1,0 +1,59 @@
+@(title: String)(user: Option[User])(content: Html)(implicit messages: Messages)
+<html lang="en">
+<head>
+    <title>@title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned(s"images/favicon.png")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned(s"stylesheets/main.css")">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <script type="text/javascript" src="@routes.Assets.versioned(s"javascripts/rjs_config.js")"></script>
+    <script type="text/javascript" data-main="@routes.Assets.versioned(s"javascripts/bundle.js")" src="@routes.Assets.versioned(s"lib/requirejs/require.js")"></script>
+    </head>
+    <body>
+    	<header>
+			<a class="icon-brand" href="@routes.HomeController.index()">
+				<img id="brand-icon" src="@routes.Assets.versioned(s"images/banner.svg")"></img>
+			</a>
+			<div id="sposo-ad-placeholder">Some advertisment here ..</div>
+			<div id="user_menu_icon">
+				@user_logo(user)
+			</div>
+		</header>
+		<main role="main">
+			<div id="left_details_panel" class="details_left">
+				Details here..
+			</div>
+			<div id="main_panel" class="container">
+				@content
+			</div>
+			<div id="user_menu_div" class="details_right">
+				@menu_user(user)
+			</div>
+		</main>
+		<footer class="footer">
+			<div id="footer_menu" class="container">
+				<a id="quick_links" type="button">@messages("menu.quicklinks")</a>
+  				<div>
+  					<ul>
+						<li>Suche</li>
+						<li>Quiz</li>
+						<li>Impressum</li>
+						<li>Sitemap</li>
+					</ul>
+  				</div>
+			</div>
+		</footer>
+		<script type="text/javascript">
+			// Define some site-specific global vars
+			var baseUrl = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port : '');
+			var API_URL = baseUrl+'@routes.RestController.index()';
+			var HOME_PAGE = baseUrl+'@routes.PageController.userHome()';
+
+			var messages = {
+
+				// TODO: load from server!
+				'login.error.username': 'User name or password could not be verified.'
+			};
+		</script>
+    </body>
+</html>

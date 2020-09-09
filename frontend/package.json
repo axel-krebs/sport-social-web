@@ -1,0 +1,47 @@
+{
+  "name": "sport-social-web",
+  "version": "1.0.0-SNAPSHOT",
+  "description": "",
+  "private": true,
+  "directories": {
+    "src": "./app/assets/javascripts"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2",
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0",
+    "@babel/core": "^7.9.0",
+    "@babel/polyfill": "7.8.7",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "babel-loader": "^8.1.0",
+    "@types/react" : "16.9.34",
+    "@types/react-dom": "16.9.7",
+    "@material-ui/core": "4.9.12",
+    "@material-ui/icons" : "4.9.1",
+    "@material-ui/styles" : "4.9.1",
+    "css-loader" : "3.5.3",
+    "style-loader" : "1.2.1",
+    "less-loader" : "6.0.0",
+    "file-loader": "6.0.0",
+    "url-loader": "4.1.0"
+  },
+  "dependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-redux" : "7.2.0",
+    "redux" : "4.0.5",
+    "reselect" : "4.0.0",
+    "prop-types" : "15.7.2",
+    "regenerator-runtime": "0.13.5",
+    "react-bootstrap": "1.3.0"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean & webpack --mode production"
+  },
+  "author": "Axel Krebs",
+  "license": "OWN"
+}

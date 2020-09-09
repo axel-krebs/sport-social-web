@@ -1,0 +1,13 @@
+@(user: Option[User])(implicit messages: Messages)
+@user match {
+    case Some(user) => {
+        <a type="button" class="user-logo" href="@routes.HomeController.home()">
+            <img id="user-logo-button" src="@routes.Assets.versioned("images/runner-color.svg")"></img>
+        </a>
+    }
+    case None => {
+            <a type="button" class="user-logo" href="@routes.HomeController.login()">
+                <img id="user-logo-button" src="@routes.Assets.versioned("images/runner-faded.svg")"></img>
+            </a>
+    }
+}

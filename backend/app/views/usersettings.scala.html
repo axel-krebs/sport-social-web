@@ -1,0 +1,8 @@
+@(user: Option[User])(implicit messages: Messages, flash: Flash)
+@main("Sport social - Settings")(user) {
+  	<h1>User Settings</h1>
+	<p>Login name: @user.foreach { user => user.nickName }</p>
+	<script type="text/javascript">
+
+	</script>
+}

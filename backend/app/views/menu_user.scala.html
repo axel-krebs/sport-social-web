@@ -1,0 +1,19 @@
+@(user: Option[User])(implicit messages: Messages)
+@user match {
+    case Some(user) => {
+        <h3>User - Info</h3>
+        <p>user.email</p>
+        <a href="#">Mitteilungen</a>
+        <a href="#">Anstehende Termine</a>
+        <div class="dropdown-divider"></div>
+        <a href="@routes.HomeController.usersettings()">Settings</a>
+        <a href="@routes.HomeController.logout()">Logout</a>)
+    }
+    case None => {
+        <div id="login_menu_div" aria-labelledby="dropdownMenuLink">
+            <p>@messages("menu.login.notloggedin")</p>
+            <a href="@routes.HomeController.login()">Login in</a>
+            <a href="#">Register new user.</a>
+        </div>
+    }
+}

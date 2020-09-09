@@ -1,0 +1,19 @@
+@(loginForm: Form[LoginData])(implicit messages: Messages, flash: Flash)
+@main("Sport social - Login")(None) {
+    <h1>Login</h1>
+    @helper.form(action = routes.HomeController.authenticate(), 'class->"form-inline") {
+        <fieldset>
+            <legend>
+                @messages("menu.login.notloggedin")
+            </legend>
+            @helper.inputText(loginForm("loginName"),
+            '_label -> messages("profile.login.form.nickname"),
+            'class -> "control-label"
+            )
+            @helper.inputText(loginForm("loginPass"),
+            '_label -> messages("profile.login.form.password"),
+            'class -> "control-label")
+            <input class="btn btn-primary" type="submit" value="GO!"></input>
+        </fieldset>
+    }
+}

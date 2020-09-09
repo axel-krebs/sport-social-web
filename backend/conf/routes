@@ -1,0 +1,43 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+GET    /               controllers.HomeController.index()
+
+GET /login             controllers.HomeController.login()
+
++nocsrf
+POST   /authenticate          controllers.HomeController.authenticate()
+
+GET    /home           controllers.HomeController.home()
+
+GET    /user           controllers.HomeController.usersettings()
+
+GET    /logout         controllers.HomeController.logout()
+
+# Test
+GET    /test           controllers.TestController.index()
+
+GET    /search         controllers.TestController.searchPlayer()
+
+# routes used by AJAX
++nocsrf
+POST   /test           controllers.TestController.post()
+
+# Map static resources from the /public folder to the /assets URL path
+GET    /assets/*file    controllers.Assets.versioned(path="/public", file: Asset)
+
+#->     /webjars        webjars.Routes
+
+GET /api                    controllers.RestController.index()
+
+GET /api/user               controllers.RestController.user(nickName, passWord)
+
+GET /api/user_profile       controllers.PageController.userProfile()
+
+GET /api/user_settings      controllers.PageController.userSettings()
+
+GET /api/home_page          controllers.PageController.userHome()
+
+GET /api/places             controllers.RestController.listPlaces()
