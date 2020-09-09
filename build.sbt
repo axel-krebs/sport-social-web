@@ -6,7 +6,7 @@ version := "1.0-SNAPSHOT"
 
 herokuAppName in Compile := "sport-social-web"
 herokuProcessTypes in Compile := Map(
-  "web" -> "target/scala-2.12/sport-social-web_2.12-1.0-SNAPSHOT.jar -Dhttp.port=$PORT"
+  "web" -> "backend/target/scala-2.12/sport-social-web-backend_2.12-1.0-SNAPSHOT.jar -Dhttp.port=$PORT"
 )
 
 lazy val root = (project in file("."))
