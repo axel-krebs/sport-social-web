@@ -1,33 +1,60 @@
+import com.heroku.sbt.HerokuPlugin.autoImport.herokuProcessTypes
+import sbt.Keys.baseDirectory
+
 organization := "de.akrebs.testing"
 
 name := """sport-social-web"""
 
 version := "1.0-SNAPSHOT"
 
-herokuAppName in Compile := "sport-social-web"
+herokuAppName in Compile := "sport-social-web-backend"
+
 herokuProcessTypes in Compile := Map(
-  "web" -> "target/universal/stage/bin/sport-social-web -Dhttp.port=$PORT"
-)
-herokuIncludePaths in Compile := Seq(
-  "backend"
+  "web" -> "target/universal/stage/bin/sport-social-web-backend -Dhttp.port=$PORT"
 )
 
+lazy val distTask = taskKey[Unit]("dist task")
+
+lazy val stageTask = taskKey[Unit]("stage task")
+
 lazy val root = (project in file("."))
-  .aggregate(frontend,backend)
+  .aggregate(frontend, backend)
   .settings(
     update / aggregate := false,
     Compile / run := {
       (frontend / webpack).evaluated
       (backend / Compile / run).evaluated
+    },
+
+    // staged artifacts are in sub-project, but heroku expects them in base directory.
+    stageTask := {
+      var res = (backend / Compile / stage).value
+      IO.copyDirectory(res, baseDirectory.value / "target/universal/stage")
+    },
+
+    // equally, re-define Play's dist task to copy ZIP file to root target (obsolete)
+    distTask := {
+      var res = (backend / Compile / dist).value
+      IO.copyFile(res, baseDirectory.value / "target")
     }
   )
 
-lazy val frontend = project.in(file("frontend")).enablePlugins(SbtWeb)
+lazy val frontend = project.in(file("frontend"))
+  .enablePlugins(SbtWeb)
+  .settings(
+    // settings for frontend only
+  )
+
 
 lazy val backend = project.in(file("backend"))
   .enablePlugins(PlayScala)
   .enablePlugins(SbtWeb)
   .disablePlugins(SbtWebpack)
+  .settings(
+    trackInternalDependencies := TrackLevel.TrackIfMissing
+  )
+
+
 
 resolvers ++= Seq(
   "Typesafe Ivy repository" at "https://repo.typesafe.com/typesafe/ivy-releases/",
