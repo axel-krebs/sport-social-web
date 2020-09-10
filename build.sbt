@@ -54,8 +54,6 @@ lazy val backend = project.in(file("backend"))
     trackInternalDependencies := TrackLevel.TrackIfMissing
   )
 
-
-
 resolvers ++= Seq(
   "Typesafe Ivy repository" at "https://repo.typesafe.com/typesafe/ivy-releases/",
   "Typesafe Maven Repository" at "https://repo.typesafe.com/typesafe/maven-releases/",
