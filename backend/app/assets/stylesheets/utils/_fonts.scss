@@ -1,0 +1,10 @@
+/* Global font properties */
+body {
+    font-size: small;
+}
+@include media-breakpoint-up(sm) {
+    font-size: 0.75em;
+}
+@include media-breakpoint-up(lg) {
+    font-size: large;
+}

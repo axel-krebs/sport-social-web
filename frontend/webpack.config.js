@@ -6,8 +6,8 @@ module.exports = {
     entry: path.resolve(__dirname,"./src/index.js"),
     output: {
         path: path.resolve(__dirname, "../backend/public/javascripts"),
-        filename: "bundle.js",
-        library: 'sposo-web',
+        filename: "sposo_deco.js",
+        library: 'sposo-react',
         libraryTarget: 'umd',
     },
     module: {
@@ -35,14 +35,6 @@ module.exports = {
                             importLoaders: 1,
                             sourceMap: true
                         }
-                    },
-                    {
-                        loader: "less-loader",
-                        options: {
-                            lessOptions: {
-
-                            }
-                        }
                     }
                 ]
             },
@@ -66,7 +58,7 @@ module.exports = {
     },
     resolve: {
         alias: {
-        '../../theme.config$': path.join(__dirname, 'semantic-ui/theme.config')
+            '../../theme.config$': path.join(__dirname, 'semantic-ui/theme.config')
         }
      }
 }

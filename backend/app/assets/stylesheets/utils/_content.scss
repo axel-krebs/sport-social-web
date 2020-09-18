@@ -1,33 +1,42 @@
-/* basic layout for banner SVG image; styles here are valid for high resolution. */
-@use 'variables';
-
-.icon-brand {
+/* Elements of the web page, that are not containers. */
+#brand_icon_link {
     display: inline-block;
-    min-width: $main_col_left;
-    padding: 10px 5px 5px 15px; // should be like .details-left!
+    //float: left;
+    min-width: 50px;
+    min-height: 100%;
 }
-
 #brand_icon {
-    height: 80%;
+    height: 75%;
 }
-
 #sposo_ad_placeholder {
+    @extend .flex-fill;
+    margin-right: 5px;
+    padding-left: 5px;
     background-color: rgb(204, 255, 255);
-    width: $main_col_center;
-    padding: 10px 15px 5px 15px;
-    flex-shrink: 0;
+    width: auto;
+    min-height: 100%;
 }
-.user-logo {
+#user_menu_icon_div {
+    margin-left: auto;
+    //width: 33px;
+    //min-height: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+#user_logo_link {
     display: inline-block;
-    height: 100%;
-    width: 65px;
 }
-#user_logo_button {
+#user_logo_img {
     background-repeat: no-repeat;
-    min-width: 25px;
-    min-height: 25px;
-    height: 70%;
-    padding: 10px 20px 5px 15px; // simulate baseline justify
+    max-width: 28px;
+    max-height: 28px;
+    padding: 3px 5px 3px 3px;
+}
+#left_details_aside {
+    //padding: 10px 5px 5px 10px;
+}
+#main_panel {
+    height: 100%;
 }
 .user-menu-active {
     background-color: palegoldenrod;
@@ -37,3 +46,70 @@
     border: 1px;
     border-style: groove;
 }
+//    #footer_menu {
+//    }
+//    #quick_links {
+//    }
+/* Small devices (landscape phones, 576px and up) */
+@include media-breakpoint-up(sm){
+    #brand_icon_link {
+        min-width: 75px;
+    }
+    #user_menu_icon_div {
+        min-width: 30px;
+    }
+    #user_logo_img {
+        max-height: 35px;
+    }
+}
+/* Tablet */
+@include media-breakpoint-up(md){
+    #brand_icon_link {
+        min-width: $main_col_left; // 180px
+        //padding: 10px 5px 10px 15px; // should be like .details-left!
+    }
+    #brand_icon {
+        min-width: 150px;
+    }
+    #sposo_ad_placeholder {
+        //margin-right: 45px;
+        width: 100%;
+    }
+    #user_menu_icon_div {
+        min-width: 44px;
+    }
+    #user_logo_link {
+        //padding: 2px 3px 2px 4px;
+    }
+    #user_logo_img {
+        max-height: 44px;
+        min-width: 44px;
+    }
+}
+/* Desktop */
+@include media-breakpoint-up(lg) {
+    #brand_icon_link {
+
+    }
+    #brand_icon {
+         padding: 5px 5px 5px 10px;
+    }
+    #sposo_ad_placeholder {
+        width: $main_col_center;
+        flex: initial;
+    }
+    #user_menu_icon_div {
+        width: 55px;
+    }
+    #user_logo_link {
+        padding: 10px 20px 5px 15px; // simulate baseline justify
+    }
+    #user_logo_img {
+        max-width: 45px;
+        max-height: 45px;
+    }
+}
+/* if layout changes for X-tra large screens */
+//@include media-breakpoint-up(xl) {
+    //
+//}

@@ -7,7 +7,9 @@ export function registerUser(user) {
 };
 
 export function logoutUser() {
-    return {type: 'LOG_OUT'};
+    return {
+        type: 'LOG_OUT'
+    };
 };
 
 export function logError(error){

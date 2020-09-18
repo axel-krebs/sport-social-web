@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Link as RLink, Switch } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
+import { Icon, Button, Menu, MenuItem, Fade, Popover, Link, Dialog, DialogTitle, DialogContent, DialogActions, Input, InputLabel, Drawer, SwipeableDrawer, List, ListItem, ListItemIcon, ListItemText, Divider } from '@material-ui/core';
+import { InboxIcon, EmailIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { sposoStyles, device, supportedDevices } from './sposoStyles.js';
-import { Icon, Button, Menu, MenuItem, Fade, Popover, Link, Dialog, DialogTitle, DialogContent, DialogActions, Input, InputLabel, SwipeableDrawer } from '@material-ui/core';
 import * as actions from './actions.js';
 import { fetchJson, sendJson, loadPage } from './backend.js';
 //import { useLogin } from './userLogin.js';
 
-const useStyles = makeStyles(sposoStyles);
-
 /*
  * Wraps the user icon button and acts as starting point for the different login states, e.g. show the user menu when
- * already logged in or, offer a login screen when the user is unknown.
+ * already logged in or, offer a login screen when the user is yet unknown.
  */
 export function UserMenuCtl(props) {
 
     const userState = useSelector(state => state.userState);
 
     const [anchorEl, setAnchorEl] = useState(null);
-
-    const mainPanelRef = props.mainPanel;
 
     const openMenu = (event) => {
 
@@ -30,6 +27,8 @@ export function UserMenuCtl(props) {
 
     const hideMenu = (args) => {
 
+        console.log('Setting anchor to NULL');
+
         setAnchorEl(null);
     };
 
@@ -38,11 +37,12 @@ export function UserMenuCtl(props) {
 
         if(Boolean(userState.user)) {
 
-            return <UserMenu
-                        closeCallback={ hideMenu }
-                        anchor={ anchorEl }
-                        user={ userState.user }
-                        contentPanel= { mainPanelRef } />;
+            return (
+                <UserMenu
+                    closeCallback={ hideMenu }
+                    anchor={ anchorEl }
+                    user={ userState.user } />
+            );
         }
         else {
 
@@ -63,7 +63,7 @@ export function UserMenuCtl(props) {
             </Button>
 
             {
-                Boolean(anchorEl) ? chooseMenu() : null
+                Boolean(anchorEl) ? chooseMenu() : console.log('UserMenuCtl->chooseMenu: anchor was NULL.')
             }
 
         </div>
@@ -73,26 +73,22 @@ export function UserMenuCtl(props) {
 /* The React Icon element that replaces the SVG file used in the template. */
 function UserIcon(props) {
 
-    const classes = useStyles(props);
-
     const userState = useSelector(state => state.userState);
 
     return (
 
         Boolean(userState) ?
 
-            <img className={classes.userButton} src="/assets/images/runner-color-border.svg"></img>
+            <img className="user-logo" src="/assets/images/runner-color.svg"></img>
 
         :
 
-            <img className={classes.userButton} src="/assets/images/runner-color.svg"></img>
+            <img className="user-logo" src="/assets/images/runner-faded.svg"></img>
     );
 }
 
 /* Show a pseudo-menu when user is not logged-in; offer login button. */
 function NotLoggedMenu(props) {
-
-    const classes = useStyles(props);
 
     const [open, setOpen] = useState(true);
 
@@ -108,8 +104,6 @@ function NotLoggedMenu(props) {
     const openLoginDialog = (event) => {
 
         setShowDialog(true);
-
-        //props.closeCallback();
     }
 
     return (
@@ -130,7 +124,7 @@ function NotLoggedMenu(props) {
                 }}
             >
 
-                <p className={classes.loginMenuNotLoggedTitle}>Not logged in. </p>
+                <p>Not logged in. </p>
 
                 <Link
                   component="button"
@@ -149,8 +143,6 @@ function NotLoggedMenu(props) {
 function LoginDialog(props){
 
     const userState = useSelector(state => state.userState);
-
-    const classes = useStyles(props);
 
     const [open, setOpen] = useState(true);
 
@@ -174,33 +166,26 @@ function LoginDialog(props){
                 let errMsg = 'Message: ' + messages['login.error.username'];
 
                 dispatch(actions.logError(errMsg));
-
-                console.log('userDate invalid! Message: ' + userData['invalid']);
             }
             else {
 
                 dispatch(actions.registerUser(userData));
 
-                console.log('userData OK.. String value: ' + userData.toString());
+                closeDialog();
             }
         }
 
         catch(err){
 
             dispatch(actions.logError(err));
-
-            console.log('An error occurred: ' + err);
         }
      };
 
     useEffect(
         () => { loadUserData() },
 
-        // .. but only trigger this load when trialsCounter was incremented - see action button in login dialog
         [trialsCounter]
      );
-
-    console.log('LoginDialog, result: ' + JSON.stringify(userState) + ', trialsCounter: ' + trialsCounter);
 
     const closeDialog = () => {
 
@@ -211,7 +196,7 @@ function LoginDialog(props){
 
     return (
 
-        <Dialog open={ open } onClose={ closeDialog }  aria-labelledby="simple-dialog-title">
+        <Dialog open={ open } onClose={ closeDialog } aria-labelledby="simple-dialog-title">
 
             <DialogTitle id="simple-dialog-title">Please provide login credentials.</DialogTitle>
 
@@ -243,7 +228,16 @@ function LoginDialog(props){
                 <Button
                     variant="contained"
                     color="primary"
-                    className={ classes.loginButton }
+                    onClick={ () => closeDialog() }
+                >
+
+                    { messages['cancel'] }
+
+                </Button>
+
+                <Button
+                    variant="contained"
+                    color="primary"
                     endIcon={<LoginIcon></LoginIcon>}
                     onClick={ () => setTrialsCounter (trialsCounter + 1) }
                 >
@@ -266,86 +260,76 @@ function LoginIcon() {
     );
 }
 
-/* The user menu shown when the user is already logged-in.
- * User object available via props.user (read-only)
+/* The user menu is shown when the user is already logged-in. A 'user' object is available via props.user (read-only);
+ * display size can be investigated via 'device' property in UserMenuCtl (parent).
  */
 function UserMenu(props) {
 
-    const [open, setOpen] = useState(false);
-
-    const [displayStyle, setDisplayStyle] = useState(device);
+    const [open, setOpen] = useState(true);
 
     const dispatch = useDispatch();
 
-    const closeMenu = () => {
+    const logout = () => {
+
+        dispatch( actions.logoutUser() );
+
+        closeMenu();
+    }
+
+    const closeMenu = (event) => {
 
         setOpen(false);
 
         props.closeCallback();
     };
 
-    const showContent = (url) => {
+    return (
 
-        var page = loadPage(url);
+         <Menu
+             anchorEl={ props.anchor }
+             open={ open }
+             onClose={  console.log('Closing UserMenu..') }
+             onEntering={ console.log('Entering UserMenu, device style = TABLET') }
+             TransitionComponent={ Fade }
+         >
+             <MenuItem onClick={ () => closeMenu() }>
 
-        props.contentPanel.innerHtml = page;
-    }
+                <RLink to={{
+                      pathname: "/content",
+                      search: "?name=Home",
+                      hash: "#the-hash",
+                      state: { fromDashboard: true }
+                    }}>
+                    Home
+                </RLink>
+             </MenuItem>
 
-    const logout = () => {
+             <MenuItem onClick={ () => closeMenu() }>
 
-        dispatch( actions.logoutUser() );
+                 <RLink to={{
+                       pathname: "/content",
+                       search: "?name=Settings",
+                       hash: "#the-hash",
+                       state: { fromDashboard: true }
+                     }}>
+                     Settings
+                 </RLink>
+             </MenuItem>
 
-        props.closeCallback();
-    }
+             <MenuItem onClick={ () => closeMenu() }>
 
-    if(displayStyle == supportedDevices.DESKTOP) {
+                 <RLink to={{
+                       pathname: "/do",
+                       search: "?action=logout",
+                       hash: "#the-hash",
+                       state: { fromDashboard: true }
+                     }}>
+                     Logout
+                 </RLink>
 
-        return (
+             </MenuItem>
 
-            <Menu
-                id="user-menu"
-                anchorEl={ props.anchor }
-                open={ open }
-                onClose={ closeMenu }
-                TransitionComponent={ Fade }
-            >
-                <MenuItem onClick={ () => showContent('/user_profile') }>Profile</MenuItem>
-
-                <MenuItem onClick={ () => showContent('/user_settings') }>Settings</MenuItem>
-
-                <MenuItem onClick={ () => logout }>Logout</MenuItem>
-
-            </Menu>
-
-        );
-
-    } else if([supportedDevices.TABLET, supportedDevices.MOBILE].includes(displayStyle)) {
-
-        return (
-
-             <SwipeableDrawer anchor='right' open={ open } onClose={ closeMenu }>
-
-                list (JSON.stringify(props.user['email']), 'Nachrichten', 'Settings' )
-
-             </SwipeableDrawer>
-         );
-
-    } else {
-
-        return (
-
-            <SwipeableDrawer anchor='right' open={ open } onClose={ closeMenu }>
-
-                <p>Drawer (default)</p>
-
-            </SwipeableDrawer>
-         );
-     }
-}
-
-function UserContent(props) {
-
-    render(
-        props.page
+         </Menu>
     );
+
 }

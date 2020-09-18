@@ -7,7 +7,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "../backend/public/javascripts"),
         filename: "sposo_app.js",
-        library: 'sposo-web',
+        library: 'sposo-app',
         libraryTarget: 'umd',
     },
     module: {
@@ -66,7 +66,7 @@ module.exports = {
     },
     resolve: {
         alias: {
-        '../../theme.config$': path.join(__dirname, 'semantic-ui/theme.config')
+            //'../../theme.config$': path.join(__dirname, 'semantic-ui/theme.config')
         }
      }
 }

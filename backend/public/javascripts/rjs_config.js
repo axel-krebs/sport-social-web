@@ -3,6 +3,7 @@ var require = {
     baseUrl: 'assets/lib',
     paths: {
         jquery : 'jquery/jquery.min',
-        main: './main.js'
+        sposo_deco: '../javascripts/sposo_deco',
+        sposo_app: '../javascripts/sposo_app'
     }
 };

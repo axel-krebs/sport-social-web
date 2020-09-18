@@ -1,4 +1,3 @@
-
 -- !Ups
 
 /* User can login to application */
@@ -137,6 +136,7 @@ drop table if exists score;
 drop table if exists play_match_team;
 drop table if exists play_match;
 drop table if exists team_player;
+drop table if exists player_address;
 drop table if exists player;
 drop table if exists player_settings;
 drop table if exists team_role;

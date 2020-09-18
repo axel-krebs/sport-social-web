@@ -7,31 +7,32 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned(s"stylesheets/main.css")">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     <script type="text/javascript" src="@routes.Assets.versioned(s"javascripts/rjs_config.js")"></script>
-    <script type="text/javascript" data-main="@routes.Assets.versioned(s"javascripts/bundle.js")" src="@routes.Assets.versioned(s"lib/requirejs/require.js")"></script>
+    <script type="text/javascript" data-main="@routes.Assets.versioned(s"javascripts/main.js")" src="@routes.Assets.versioned(s"lib/requirejs/require.js")"></script>
     </head>
     <body>
     	<header>
-			<a class="icon-brand" href="@routes.HomeController.index()">
-				<img id="brand-icon" src="@routes.Assets.versioned(s"images/banner.svg")"></img>
+			<a id="brand_icon_link" href="@routes.HomeController.index()">
+<!--				<img id="brand_icon" src="@routes.Assets.versioned(s"images/banner.svg")"></img>-->
+				BRAND
 			</a>
-			<div id="sposo-ad-placeholder">Some advertisment here ..</div>
-			<div id="user_menu_icon">
+			<div id="sposo_ad_placeholder">ADVERTISEMENT</div>
+			<div id="user_menu_icon_div">
 				@user_logo(user)
 			</div>
 		</header>
 		<main role="main">
-			<div id="left_details_panel" class="details_left">
-				Details here..
+			<div id="left_details_panel">
+				<div id="left_details_aside"></div>
 			</div>
-			<div id="main_panel" class="container">
+			<div id="main_panel">
 				@content
 			</div>
-			<div id="user_menu_div" class="details_right">
+			<div id="right_details_panel">
 				@menu_user(user)
 			</div>
 		</main>
-		<footer class="footer">
-			<div id="footer_menu" class="container">
+		<footer>
+			<div id="footer_menu">
 				<a id="quick_links" type="button">@messages("menu.quicklinks")</a>
   				<div>
   					<ul>
@@ -44,6 +45,7 @@
 			</div>
 		</footer>
 		<script type="text/javascript">
+
 			// Define some site-specific global vars
 			var baseUrl = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port : '');
 			var API_URL = baseUrl+'@routes.RestController.index()';
@@ -52,7 +54,8 @@
 			var messages = {
 
 				// TODO: load from server!
-				'login.error.username': 'User name or password could not be verified.'
+				'login.error.username': 'User name or password could not be verified.',
+				'cancel': "Abbrechen",
 			};
 		</script>
     </body>

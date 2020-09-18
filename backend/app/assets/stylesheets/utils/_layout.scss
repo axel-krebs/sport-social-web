@@ -1,35 +1,117 @@
-/* Define styles for container elements */
+/* Define styles for container elements - mobile-first (Extra small devices (portrait phones, less than 576px)) */
 header {
+    @extend .container-fluid, .d-flex, .flex-row;
+    //align-items: center;
+    //justify-content: center;
     background-color: rgb(0, 255, 204);
-    height: 75px;
-    display: flex;
-    flex-direction: row;
+    height: 30px;
+    padding: 2px 4px 2px 4px;
+}
+#left_details_panel {
+    background-color: rgb(255, 204, 153);
+    display: none;
 }
 main {
-    display: flex;
-}
-.details_left {
-    background-color: rgb(255, 204, 153);
-    min-width: $main_col_left; // should be width of brand icon plus padding
-    padding: 10px 5px 10px 15px;
-}
-main .container {
-    background-color: beige;
-    padding: 15px; // should be same as footer .container!
-    min-width: $main_col_center;
-}
-.details_right {
-    width: auto;
-}
-footer {
+    @extend .container-fluid;
     display: flex;
     flex-direction: row;
-    margin-bottom: 0;
+    background-color: beige;
+    top: 30px;
+    padding-bottom: 32px; // place for footer
+    overflow-y: auto;
 }
-footer > .container {
+#right_details_panel {
+    background-color: teal;
+    width: auto;
+    display: none;
+}
+footer {
+    @extend .container-fluid, .d-flex, .flex-row;
     background-color: rgb(0, 51, 102);
     color: rgb(230, 230, 255);
-    width: $main_col_center;
-    margin-left: 200px;
-    padding: 20px 15px 10px 15px; // padding left should be same as main .container!
+    position: absolute;
+    bottom: 0;
+    height: 32px;
 }
+/* Small devices (landscape phones, 576px and up) */
+@include media-breakpoint-up(sm){
+    header {
+        height: 40px;
+        padding: 3px 2px 4px 6px;
+    }
+    main {
+        top: 40px;
+        flex: 1;
+    }
+    footer {
+        height: 40px;
+    }
+}
+/* Tablet, 768px width */
+@include media-breakpoint-up(md){
+    header {
+        position: fixed;
+        height: 55px;
+        padding: 2px 2px 2px $padding_left_tab;
+    }
+    #left_details_panel {
+        display: block;
+        height: 100%;
+        min-width: calc(#{$main_col_left} + #{$padding_left_tab}); // should be width of brand icon plus padding
+    }
+    main {
+        position: fixed;
+        top: 55px;
+        bottom: 33px;
+        width: 100%;
+        overflow-y: scroll;
+        padding: 0; // override fluid container
+    }
+    #main_panel {
+        flex: 1;
+    }
+    footer {
+        background-color: black;
+        color: turquoise;
+        position: fixed;
+        bottom: 0;
+        height: 33px;
+        padding: 0;
+        //padding: 20px 15px 10px 15px; // padding left should be same as main .container!
+    }
+}
+/* Desktop */
+@include media-breakpoint-up(lg) {
+    header {
+        height: 65px;
+    }
+    main {
+        position: auto;
+        overflow: auto;
+    }
+    #left_details_panel {
+        bottom: 0;
+    }
+    #main_panel {
+        width: $main_col_center;
+        bottom: auto;
+        flex: initial;
+    }
+    #right_details_panel {
+        display: block;
+        flex: 1;
+    }
+    footer {
+        width: $main_col_center;
+        margin-left: calc(#{$main_col_left} + #{$padding_left_tab});
+        margin-top: auto;
+        //bottom: 0; // this is the end..
+    }
+}
+/* if layout changes for X-tra large screens */
+//@include media-breakpoint-up(xl) {
+    //
+//}
+
+
+

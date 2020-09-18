@@ -72,6 +72,11 @@ export async function sendJson(method, path, payload = {}) {
 
 export async function loadPage(page) {
 
+    if(API_URL == null || typeof(API_URL) === 'Undefined' ) {
+
+        return;
+    }
+
     const url = `${API_URL}${page}`;
 
     const res = await fetch(url);

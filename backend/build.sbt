@@ -38,13 +38,10 @@ libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.8.0",
   "org.webjars.npm" % "domutils" % "2.0.0",
   "org.webjars.npm" % "xmldom" % "0.1.31",
+  // the following web libs are required before loading the React app
   "org.webjars" % "requirejs" % "2.3.6",
-  "org.webjars" % "jquery" % "3.4.1"
+  "org.webjars" % "jquery" % "3.4.1",
+  "org.webjars" % "bootstrap" % "4.5.2"
+  //"com.adrianhurt" %% "play-bootstrap" % "1.6.1-P28-B4" ScalaJS
+  //"org.webjars" % "bootstrap-sass" % "3.4.1" Bootstrap 3
 )
-
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "de.akrebs.testing.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "de.akrebs.testing.binders._"
-

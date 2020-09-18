@@ -7,44 +7,18 @@ name := """sport-social-web"""
 
 version := "1.0-SNAPSHOT"
 
-herokuAppName in Compile := "sport-social-web-backend"
+scalaVersion := "2.12.10"
 
+herokuAppName in Compile := "sport-social-web"
+
+// The Heroku sbt plugin won't use the Procfile!
 herokuProcessTypes in Compile := Map(
-  "web" -> "target/universal/stage/bin/sport-social-web-backend -Dhttp.port=$PORT"
+  "web" -> "target/universal/stage/bin/sport-social-web-backend -Dconfig.resource=prod_heroku.conf -Dhttp.port=${PORT} -Ddb.default.driver=org.postgresql.Driver -Ddb.default.url=${DATABASE_URL}"
 )
 
 lazy val distTask = taskKey[Unit]("dist task")
 
 lazy val stageTask = taskKey[Unit]("stage task")
-
-lazy val root = (project in file("."))
-  .aggregate(frontend, backend)
-  .settings(
-    update / aggregate := false,
-    Compile / run := {
-      (frontend / webpack).evaluated
-      (backend / Compile / run).evaluated
-    },
-
-    // staged artifacts are in sub-project, but heroku expects them in base directory.
-    stageTask := {
-      var res = (backend / Compile / stage).value
-      IO.copyDirectory(res, baseDirectory.value / "target/universal/stage")
-    },
-
-    // equally, re-define Play's dist task to copy ZIP file to root target (obsolete)
-    distTask := {
-      var res = (backend / Compile / dist).value
-      IO.copyFile(res, baseDirectory.value / "target")
-    }
-  )
-
-lazy val frontend = project.in(file("frontend"))
-  .enablePlugins(SbtWeb)
-  .settings(
-    // settings for frontend only
-  )
-
 
 lazy val backend = project.in(file("backend"))
   .enablePlugins(PlayScala)
@@ -53,6 +27,38 @@ lazy val backend = project.in(file("backend"))
   .settings(
     trackInternalDependencies := TrackLevel.TrackIfMissing
   )
+
+lazy val root = (project in file("."))
+  .aggregate(backend, frontend, webapp)
+  .settings(
+    update / aggregate := false,
+    Compile / run := {
+      (backend / Compile / run).evaluated
+      (frontend / webpack).evaluated
+      //(webapp / webpack).evaluated
+    },
+
+    // staged artifacts are in sub-project, but Heroku expects them in base directory.
+    // Why not defined in sub-project? Because baseDirectory not accessible there..
+    stageTask := {
+      val res = (backend / Compile / stage).value
+      IO.copyDirectory(res, baseDirectory.value / "target/universal/stage")
+    },
+
+    // equally, re-define Play's dist task to copy ZIP file to root target (obsolete)
+    distTask := {
+      val res = (backend / Compile / dist).value
+      IO.copyFile(res, baseDirectory.value / "target")
+    }
+  )
+
+lazy val frontend = project.in(file("frontend"))
+  .enablePlugins(SbtWeb)
+  .enablePlugins(SbtWebpack)
+
+lazy val webapp = project.in(file("webapp"))
+//  .enablePlugins(SbtWeb)
+//  .enablePlugins(SbtWebpack)
 
 resolvers ++= Seq(
   "Typesafe Ivy repository" at "https://repo.typesafe.com/typesafe/ivy-releases/",
