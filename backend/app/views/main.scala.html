@@ -15,7 +15,9 @@
 <!--				<img id="brand_icon" src="@routes.Assets.versioned(s"images/banner.svg")"></img>-->
 				BRAND
 			</a>
-			<div id="sposo_ad_placeholder">ADVERTISEMENT</div>
+			<div id="sposo_ad_placeholder">
+				@advertisement(user)
+			</div>
 			<div id="user_menu_icon_div">
 				@user_logo(user)
 			</div>
@@ -53,8 +55,10 @@
 
 			var messages = {
 
-				// TODO: load from server!
-				'login.error.username': 'User name or password could not be verified.',
+				// TODO: generate on server
+				'not.logged-in.title': "Not logged-in",
+				'not.logged-in.text': "Please provide a username and credentials.",
+				'login.error.username': "User name or password could not be verified.",
 				'cancel': "Abbrechen",
 			};
 		</script>

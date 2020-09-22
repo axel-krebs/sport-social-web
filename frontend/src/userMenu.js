@@ -1,10 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Link as RLink, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Link, Switch } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { Icon, Button, Menu, MenuItem, Fade, Popover, Link, Dialog, DialogTitle, DialogContent, DialogActions, Input, InputLabel, Drawer, SwipeableDrawer, List, ListItem, ListItemIcon, ListItemText, Divider } from '@material-ui/core';
-import { InboxIcon, EmailIcon } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
+import {
+    Image,
+    Button,
+    OverlayTrigger,
+    Popover,
+    Overlay,
+    InputGroup,
+    Form,
+    FormControl
+} from 'react-bootstrap';
+import { Menu, MenuItem, Fade } from '@material-ui/core';
 import * as actions from './actions.js';
 import { fetchJson, sendJson, loadPage } from './backend.js';
 //import { useLogin } from './userLogin.js';
@@ -17,38 +25,42 @@ export function UserMenuCtl(props) {
 
     const userState = useSelector(state => state.userState);
 
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null); // essentially the user icon, wrapped by button = anchor
 
     const openMenu = (event) => {
 
-        /* use the Button as anchor element for the menu */
         setAnchorEl(event.target);
     };
 
     const hideMenu = (args) => {
 
-        console.log('Setting anchor to NULL');
-
         setAnchorEl(null);
     };
 
-    /* Depending on whether user is logged-in, display user menu or log-in notification */
-    const chooseMenu = () => {
+    const chooseMenu = (anchorElement) => {
 
         if(Boolean(userState.user)) {
 
             return (
+
                 <UserMenu
                     closeCallback={ hideMenu }
-                    anchor={ anchorEl }
+                    anchor={ anchorElement }
                     user={ userState.user } />
             );
         }
+
         else {
 
-            return <NotLoggedMenu closeCallback={ hideMenu } anchor={ anchorEl } />;
+            return  (
+
+                <LoginPopover
+                    closeCallback={ hideMenu }
+                    anchor={ anchorElement }
+                />
+            );
         }
-    }
+    };
 
     return (
 
@@ -57,94 +69,37 @@ export function UserMenuCtl(props) {
             <Button
                 aria-controls="user-menu"
                 aria-haspopup="true"
+                variant="link"
                 onClick={ openMenu }
-                startIcon={ <UserIcon /> }
             >
+                <UserIcon />
+
             </Button>
 
-            {
-                Boolean(anchorEl) ? chooseMenu() : console.log('UserMenuCtl->chooseMenu: anchor was NULL.')
-            }
+            { Boolean(anchorEl) ? chooseMenu(anchorEl) : null }
 
         </div>
     );
 }
 
-/* The React Icon element that replaces the SVG file used in the template. */
+/* The React UserIcon component (hooks API). */
 function UserIcon(props) {
 
     const userState = useSelector(state => state.userState);
 
     return (
 
-        Boolean(userState) ?
+        Boolean(userState.user) ?
 
-            <img className="user-logo" src="/assets/images/runner-color.svg"></img>
+            <Image id="user_logo_img" src="/assets/images/runner-color.svg"></Image>
 
         :
 
-            <img className="user-logo" src="/assets/images/runner-faded.svg"></img>
-    );
+            <Image id="user_logo_img" src="/assets/images/runner-faded.svg"></Image>
+    )
 }
 
-/* Show a pseudo-menu when user is not logged-in; offer login button. */
-function NotLoggedMenu(props) {
-
-    const [open, setOpen] = useState(true);
-
-    const [showDialog, setShowDialog] = useState(false);
-
-    const handleClose = (event) => {
-
-        setShowDialog(false);
-
-        props.closeCallback();
-    }
-
-    const openLoginDialog = (event) => {
-
-        setShowDialog(true);
-    }
-
-    return (
-        showDialog ?
-            <LoginDialog closeCallback={ handleClose }  />
-        :
-            <Popover
-                anchorEl={ props.anchor }
-                open={ open }
-                onClose={ handleClose }
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-            >
-
-                <p>Not logged in. </p>
-
-                <Link
-                  component="button"
-                  variant="body2"
-                  onClick={ openLoginDialog }
-                >
-                  Login
-
-                </Link>
-
-            </Popover>
-    );
-}
-
-/* Show a dialog where user can enter credentials */
-function LoginDialog(props){
-
-    const userState = useSelector(state => state.userState);
-
-    const [open, setOpen] = useState(true);
+function LoginPopover(props) {
 
     const [nickName, setNickName] = useState('');
 
@@ -171,7 +126,9 @@ function LoginDialog(props){
 
                 dispatch(actions.registerUser(userData));
 
-                closeDialog();
+                // TODO show home page
+
+                props.closeCallback();
             }
         }
 
@@ -182,103 +139,111 @@ function LoginDialog(props){
      };
 
     useEffect(
+
         () => { loadUserData() },
 
         [trialsCounter]
      );
 
-    const closeDialog = () => {
-
-        setOpen(false);
+    function handleCancel(event) {
 
         props.closeCallback();
-    };
-
-    return (
-
-        <Dialog open={ open } onClose={ closeDialog } aria-labelledby="simple-dialog-title">
-
-            <DialogTitle id="simple-dialog-title">Please provide login credentials.</DialogTitle>
-
-            <DialogContent>
-
-                <InputLabel id="nick_name">Nickname</InputLabel>
-
-                <Input
-                    aria-labelledby="nick_name"
-                    value={ nickName }
-                    onChange={ (e) => setNickName(e.target.value) }>
-
-                </Input>
-
-                <InputLabel id="pass_word">Password</InputLabel>
-
-                <Input
-                    type="password"
-                    aria-labelledby="pass_word"
-                    value={ passWord }
-                    onChange={(e) => setPassWord(e.target.value)}>
-
-                </Input>
-
-            </DialogContent>
-
-            <DialogActions>
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={ () => closeDialog() }
-                >
-
-                    { messages['cancel'] }
-
-                </Button>
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    endIcon={<LoginIcon></LoginIcon>}
-                    onClick={ () => setTrialsCounter (trialsCounter + 1) }
-                >
-
-                    Login
-
-                </Button>
-
-            </DialogActions>
-
-        </Dialog>
-    );
-}
-
-/* The icon shown in the login dialog to execute login. */
-function LoginIcon() {
-
-    return (
-        <Icon></Icon>
-    );
-}
-
-/* The user menu is shown when the user is already logged-in. A 'user' object is available via props.user (read-only);
- * display size can be investigated via 'device' property in UserMenuCtl (parent).
- */
-function UserMenu(props) {
-
-    const [open, setOpen] = useState(true);
-
-    const dispatch = useDispatch();
-
-    const logout = () => {
-
-        dispatch( actions.logoutUser() );
-
-        closeMenu();
     }
 
-    const closeMenu = (event) => {
+    function handleSubmit(event) {
 
-        setOpen(false);
+        event.preventDefault();
+
+        let form = event.currentTarget;
+
+        setNickName(form.elements['nick_name'].value);
+
+        setPassWord(form.elements['pass_word'].value);
+
+        setTrialsCounter(trialsCounter + 1);
+
+        // Popover closed when login successful, see 'loadUserData'
+    }
+
+    return (
+
+        <Overlay
+            target={ props.anchor }
+            show={ true }
+            placement="left"
+            rootClose={ true }
+            rootCloseEvent='click'
+            onHide={ handleCancel } >
+
+            {(props) => (
+
+                <Popover
+                    id="not_logged_in"
+                    {...props}
+                >
+
+                    <Popover.Title as="h3">{ messages['not.logged-in.title'] }</Popover.Title>
+
+                    <Popover.Content>
+
+                      { messages['not.logged-in.text'] }
+
+                        <Form onSubmit={ handleSubmit }>
+
+                            <Form.Group controlId="nick_name" className="mb-3">
+
+                                <Form.Label>Nickname</Form.Label>
+
+                                <Form.Control type="text" placeholder="Nickname" id="nick_name"></Form.Control>
+
+                            </Form.Group>
+
+                            <Form.Group controlId="pass_word">
+
+                                <Form.Label>Password</Form.Label>
+
+                                <Form.Control type="password" placeholder="Password" />
+
+                            </Form.Group>
+
+                            <Button type="submit" className="mr-1">
+
+                                Login
+
+                            </Button>
+
+                            <Button className="mr-1" onClick={ handleCancel }>
+
+                                Cancel
+
+                            </Button>
+
+                            <p>Not registered? Register <Link to={{
+                                pathname: "/do",
+                                search: "?action=register",
+                                hash: "#goto-anchor"
+                                }} onClick={ handleCancel }>
+
+                                here
+
+                                </Link>.
+                            </p>
+
+                        </Form>
+
+                    </Popover.Content>
+
+                </Popover>
+
+            )}
+        </Overlay>
+    );
+}
+
+/* The user menu is shown when the user is logged-in. The 'user' object is available via props.user (read-only); */
+function UserMenu(props) {
+
+    const closeMenu = (event) => {
 
         props.closeCallback();
     };
@@ -287,49 +252,54 @@ function UserMenu(props) {
 
          <Menu
              anchorEl={ props.anchor }
-             open={ open }
-             onClose={  console.log('Closing UserMenu..') }
-             onEntering={ console.log('Entering UserMenu, device style = TABLET') }
+             open={ true } // controlled by UserMenuCtl
+             //onClose={  console.log('Closing UserMenu..') }
+             //onEntering={ console.log('Entering UserMenu, device style = TABLET') }
              TransitionComponent={ Fade }
          >
              <MenuItem onClick={ () => closeMenu() }>
 
-                <RLink to={{
+                <Link to={{
                       pathname: "/content",
-                      search: "?name=Home",
-                      hash: "#the-hash",
+                      search: "?name=home_page",
+                      hash: "#goto-anchor",
                       state: { fromDashboard: true }
                     }}>
+
                     Home
-                </RLink>
+
+                </Link>
+
              </MenuItem>
 
              <MenuItem onClick={ () => closeMenu() }>
 
-                 <RLink to={{
+                 <Link to={{
                        pathname: "/content",
-                       search: "?name=Settings",
+                       search: "?name=user_settings",
                        hash: "#the-hash",
                        state: { fromDashboard: true }
                      }}>
+
                      Settings
-                 </RLink>
+
+                 </Link>
+
              </MenuItem>
 
              <MenuItem onClick={ () => closeMenu() }>
 
-                 <RLink to={{
+                 <Link to={{
                        pathname: "/do",
                        search: "?action=logout",
                        hash: "#the-hash",
                        state: { fromDashboard: true }
                      }}>
                      Logout
-                 </RLink>
+                 </Link>
 
              </MenuItem>
 
          </Menu>
     );
-
 }

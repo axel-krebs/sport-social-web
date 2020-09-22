@@ -2,19 +2,18 @@
 define(['require','jquery'], (require, $) => {
 
     // use jquery in first place
-    let userMenuIconDiv = $('#user_menu_icon');
+    let userMenuIconDiv = $('#user_menu_icon_div');
     let leftDetailsDiv = $('#left_details_panel');
     let mainPanelDiv = $('#main_panel');
-    let userMenuDiv = $('#user_menu_icon');
+    let userMenuDiv = $('#right_details_panel');
     let bottomPanelDiv = $('#footer_menu');
-    let quickLinksMenu = $('#quick_links');
 
     const device = detectDevice();
 
     // only load app on tablet or smartphone
-    if(device == supportedDevices.TABLET) {
+    if([supportedDevices.TABLET,supportedDevices.MOBILE].includes(device)) {
 
-        console.log('Tablet detected - decorating the web!');
+        console.log('Smartphone or Tablet detected - decorating the web!');
 
         // 'sposo_app' dependency to be defined in rjs_config.js!
         require(['sposo_deco'], (spoSo) => {
@@ -33,35 +32,13 @@ define(['require','jquery'], (require, $) => {
             }
         });
     }
-    else if(device == supportedDevices.MOBILE) {
-
-         console.log('Smartphone detected - starting APP');
-
-         require(['sposo_app'], (spoSo) => {
-
-             // since the sections defined in the HTML version are not desired, we have to strip them off..
-             $('body>header').remove();
-             $('body>main').remove();
-             $('body>footer').remove();
-
-             // ..and append a new "root" element:
-             let rootEl = $('body').append('<div id="react_root"></div>');
-             spoSo.boot(rootEl.get(0));
-
-             return function() {
-                 // Any exports?
-             }
-         });
-    }
-    // else: do whatever good old jQuery can improve for usability!
+    // else { do whatever good old jQuery can improve for usability! }
 
     return function() {
         // Any exports?
     }
 });
 
-// since this script is loaded first, it can be used to define some global vars and utility functions -
-// maybe not good practice since in component framework it is not obvious where these come from!
 var supportedDevices = {
     DESKTOP: '992px',
     TABLET: '768px',

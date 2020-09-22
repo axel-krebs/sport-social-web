@@ -19,6 +19,10 @@ main {
     top: 30px;
     padding-bottom: 32px; // place for footer
     overflow-y: auto;
+    height: 100%;
+}
+#main_panel {
+    flex: 1;
 }
 #right_details_panel {
     background-color: teal;
@@ -29,7 +33,7 @@ footer {
     @extend .container-fluid, .d-flex, .flex-row;
     background-color: rgb(0, 51, 102);
     color: rgb(230, 230, 255);
-    position: absolute;
+    position: fixed;
     bottom: 0;
     height: 32px;
 }
@@ -37,11 +41,13 @@ footer {
 @include media-breakpoint-up(sm){
     header {
         height: 40px;
-        padding: 3px 2px 4px 6px;
+        padding: 4px 2px 4px 6px;
     }
     main {
+        flex: 1; // take all space
         top: 40px;
-        flex: 1;
+        bottom: 40px;
+        padding: 0; // override fluid container
     }
     footer {
         height: 40px;
@@ -54,28 +60,15 @@ footer {
         height: 55px;
         padding: 2px 2px 2px $padding_left_tab;
     }
-    #left_details_panel {
-        display: block;
-        height: 100%;
-        min-width: calc(#{$main_col_left} + #{$padding_left_tab}); // should be width of brand icon plus padding
-    }
     main {
-        position: fixed;
+        //position: fixed;
         top: 55px;
-        bottom: 33px;
+        bottom: 55px;
         width: 100%;
-        overflow-y: scroll;
-        padding: 0; // override fluid container
-    }
-    #main_panel {
-        flex: 1;
     }
     footer {
-        background-color: black;
-        color: turquoise;
-        position: fixed;
-        bottom: 0;
-        height: 33px;
+        background: light-gray;
+        height: 25px;
         padding: 0;
         //padding: 20px 15px 10px 15px; // padding left should be same as main .container!
     }
@@ -86,22 +79,22 @@ footer {
         height: 65px;
     }
     main {
-        position: auto;
+        //position: auto;
         overflow: auto;
     }
     #left_details_panel {
-        bottom: 0;
+        display: block;
+        height: 100%;
+        min-width: calc(#{$main_col_left} + #{$padding_left_tab}); // should be width of brand icon plus padding
     }
     #main_panel {
         width: $main_col_center;
         bottom: auto;
-        flex: initial;
-    }
-    #right_details_panel {
-        display: block;
-        flex: 1;
     }
     footer {
+        position: relative;
+        bottom: auto;
+        height: auto;
         width: $main_col_center;
         margin-left: calc(#{$main_col_left} + #{$padding_left_tab});
         margin-top: auto;
@@ -109,9 +102,13 @@ footer {
     }
 }
 /* if layout changes for X-tra large screens */
-//@include media-breakpoint-up(xl) {
-    //
-//}
+@include media-breakpoint-up(xl) {
+    #right_details_panel {
+        display: block;
+        flex: 1;
+    }
+
+}
 
 
 

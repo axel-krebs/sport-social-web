@@ -74,12 +74,14 @@ export async function loadPage(page) {
 
     if(API_URL == null || typeof(API_URL) === 'Undefined' ) {
 
-        return;
+        var tmp = {};
+        tmp["invalid"] = 'Configuration problem!';
+        return tmp;
     }
 
-    const url = `${API_URL}${page}`;
+    const url = `${API_URL}/${page}`;
 
     const res = await fetch(url);
 
-    return await res.body;
+    return res.text();
 }

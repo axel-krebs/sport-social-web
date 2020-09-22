@@ -11,7 +11,7 @@ scalaVersion := "2.12.10"
 
 herokuAppName in Compile := "sport-social-web"
 
-// The Heroku sbt plugin won't use the Procfile!
+// The Heroku sbt plugin won't use the Procfile
 herokuProcessTypes in Compile := Map(
   "web" -> "target/universal/stage/bin/sport-social-web-backend -Dconfig.resource=prod_heroku.conf -Dhttp.port=${PORT} -Ddb.default.driver=org.postgresql.Driver -Ddb.default.url=${DATABASE_URL}"
 )
@@ -29,13 +29,12 @@ lazy val backend = project.in(file("backend"))
   )
 
 lazy val root = (project in file("."))
-  .aggregate(backend, frontend, webapp)
+  .aggregate(backend, frontend)
   .settings(
     update / aggregate := false,
     Compile / run := {
       (backend / Compile / run).evaluated
       (frontend / webpack).evaluated
-      //(webapp / webpack).evaluated
     },
 
     // staged artifacts are in sub-project, but Heroku expects them in base directory.
@@ -56,10 +55,6 @@ lazy val frontend = project.in(file("frontend"))
   .enablePlugins(SbtWeb)
   .enablePlugins(SbtWebpack)
 
-lazy val webapp = project.in(file("webapp"))
-//  .enablePlugins(SbtWeb)
-//  .enablePlugins(SbtWebpack)
-
 resolvers ++= Seq(
   "Typesafe Ivy repository" at "https://repo.typesafe.com/typesafe/ivy-releases/",
   "Typesafe Maven Repository" at "https://repo.typesafe.com/typesafe/maven-releases/",
@@ -70,7 +65,8 @@ resolvers ++= Seq(
   "Bintray IDEA" at "https://dl.bintray.com/jetbrains/sbt-plugins/",
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
   "Maven Central" at "https://repo1.maven.org/maven2/",
-  "jBCrypt Repository" at "https://repo1.maven.org/maven2/org/"
+  "jBCrypt Repository" at "https://repo1.maven.org/maven2/org/",
+  "Heroku plugin" at "https://dl.bintray.com/heroku/sbt-plugins/"
   //"Local Maven Repository" at "file://C:\\Users/akrebs/.m2/repository"
   //"Axel Krebs Bintray Repository" at "https://dl.bintray.com/axel-krebs/web-ui-components/"
 )
